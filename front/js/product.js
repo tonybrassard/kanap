@@ -33,3 +33,32 @@ let cardsFetch = function () {
 };
 cardsFetch();
 
+////////
+//Getting HTML values from HTML
+/////////
+// function that gets quantity value of the form in the markup
+function qtyValue() {
+  let qty = document.getElementById("quantity");
+  return qty.value;
+}
+
+// function that get the kanap color value in the markup
+function colorValue() {
+  let color = document.getElementById("colors");
+  return color.value;
+}
+
+// HTML element : button add to cart
+const toCartBtn = document.getElementById("addToCart");
+const goToCartButton = document.getElementById("goToCart");
+goToCartButton.style.display = "none";
+// at button press : toCartBtn, function addCart that activates the 2 other function by click
+toCartBtn.addEventListener("click", () => {
+  let qty = parseInt(qtyValue());
+  let color = colorValue();
+  add2Cart(id, color, qty);
+  goToCartButton.style.display = "block";
+});
+goToCartButton.addEventListener("click", () => {
+  window.location.href = "./cart.html";
+});

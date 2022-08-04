@@ -1,8 +1,10 @@
-//////////////////////////
-//    cart elements     //
-//////////////////////////
+//    ELEMENTS CONCERNANTS LE PANIER     //
 
-// getCart function gets the cart from localStorage ; used multiple times
+
+/**
+ * Récupére le panier a partir du localstorage
+ * @return { JSON data }
+ */
 function getCart() {
   let items = [];
   if (localStorage.getItem("panier") != null) {
@@ -11,7 +13,14 @@ function getCart() {
   return items;
 }
 
-// add2cart function adds the selected kanap to the localStorage, depending on if it's already here or not in the localStorage
+
+/**
+ * Ajoute le canapé selectionné au localstorage, en fonction de sa presence ou non dans le localstorage
+ * @param { Number } productId l'idée du produit à ajouter
+ * @param { Number } color la valeur de la couleur
+ * @param { Number } qty la quantité à ajouter
+ * @return { JSON data }
+ */
 function add2Cart(productId, color, qty) {
   if (qty <= 0 || color == "") {
     return;
@@ -35,36 +44,57 @@ function add2Cart(productId, color, qty) {
   localStorage.setItem("panier", JSON.stringify(items));
 }
 
-// function deleItem deletes a selected entry from the localStorage
+
+/**
+ * Fonction qui éfface un article du localstorage
+ * @param { Number } productId l'idée du produit à ajouter
+ * @param { Number } color la valeur de la couleur
+ */
 function deleteItem(id, color) {
-  let items = getCart();
-  for (i = 0; i < items.length; i++) {
-    if (id === items[i][0] && color === items[i][1]) {
-      items.splice(i, 1);
-      localStorage.setItem("panier", JSON.stringify(items));
-      if (items.length === 0) {
-        localStorage.removeItem('panier');
+  if (confirm("Confirmer la suppression ?") == true) {
+    let items = getCart();
+    for (i = 0; i < items.length; i++) {
+      if (id === items[i][0] && color === items[i][1]) {
+        items.splice(i, 1);
+        localStorage.setItem("panier", JSON.stringify(items));
+        if (items.length === 0) {
+          localStorage.removeItem('panier');
+        }
+        window.location.reload();
       }
-      window.location.reload();
     }
   }
+
 }
+
+
 // function changeQuantity makes the localStorage quantity reflect whats the user chooses on the HTML page
+/**
+ * Cette fonction remet a jour la quantité de canapé demandée dans le localstorage en fonction de la quantité demandée dans la page HTML
+ * @param { Number } productId l'idée du produit à ajouter
+ * @param { Number } color la valeur de la couleur
+ * @param { Number } qty la quantité à ajouter
+ * @return { JSON data }
+ */
 function changeQuantity(id, color, qty) {
-  let items = getCart();
-  for (let i = 0; i < items.length; i++) {
-    if (id === items[i][0] && color === items[i][1]) {
-      items[i][2] = qty;
+  if ((qty >= 1 && qty < 100)) {
+    let items = getCart();
+    for (let i = 0; i < items.length; i++) {
+      if (id === items[i][0] && color === items[i][1]) {
+        items[i][2] = qty;
+      }
+      localStorage.setItem("panier", JSON.stringify(items));
+      reloadCart()
     }
-    localStorage.setItem("panier", JSON.stringify(items));
-    reloadCart()
+  } else {
+    window.location.reload();
   }
 }
 
 
-////////////////////////////////////////////////////////////////
-// Form elements & POST request ////////////////////
-////////////////////////////////////////////////////////////////
+// elements concernant le formulaire //
+
+
 const prenom = document.getElementById("firstName");
 const nom = document.getElementById("lastName");
 const ville = document.getElementById("city");
@@ -72,7 +102,11 @@ const adresse = document.getElementById("address");
 const mail = document.getElementById("email");
 
 
-// verify email validity
+/**
+ * Vérification de la validité de l'email
+ * @param { String } mail l'email du client
+ * @return { Boolean }
+ */
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 function validateEmail(mail) {
   const regexMail =
@@ -85,12 +119,16 @@ function validateEmail(mail) {
   }
 }
 
-// simple RegEx for names : accepted characters by RegEx
 
+// simple RegEx pour les noms, prenoms et ville : pas de chiffer accéptés
 const regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
 
 
-// verify first name validity
+/**
+ * Vérification de la validité du prenom
+ * @param { String } prenom le prénom du client
+ * @return { Boolean }
+ */
 const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 function validateFirstName(prenom) {
   if (regexName.test(prenom) == false || prenom == '') {
@@ -101,7 +139,12 @@ function validateFirstName(prenom) {
   }
 }
 
-// verify last name validity
+
+/**
+ * Vérification de la validité du nom
+ * @param { String } nom le nom du client
+ * @return { Boolean }
+ */
 const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 function validateLastName(nom) {
   if (regexName.test(nom) == false || nom == '') {
@@ -112,7 +155,11 @@ function validateLastName(nom) {
   }
 }
 
-// verify city validity
+/**
+ * Vérification de la validité de la ville
+ * @param { String } ville la ville du client
+ * @return { Boolean }
+ */
 const cityErrorMsg = document.getElementById("cityErrorMsg");
 function validateCity(ville) {
   if (regexName.test(ville) == false || ville == '') {
@@ -123,7 +170,12 @@ function validateCity(ville) {
   }
 }
 
-// verify adress validity
+
+/**
+ * Vérification de la validité de l'adresse
+ * @param { String } adresse l'adresse du client
+ * @return { Boolean }
+ */
 const addressErrorMsg = document.getElementById("addressErrorMsg");
 function validateAddress(adresse) {
   if (adresse == '') {
@@ -134,7 +186,10 @@ function validateAddress(adresse) {
   }
 }
 
-// generation of the JSON to post
+/**
+ * Fonction qui gébére le JSON à poster
+ * @return { JSON data }
+ */
 function makeJsonData() {
   let contact = {
     firstName: prenom.value,

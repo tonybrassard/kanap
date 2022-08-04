@@ -1,3 +1,4 @@
+// elements HTML 
 const cartSection = document.getElementById("cart__items");
 const cartOrder = document.getElementsByClassName("cart__order");
 const cartPrice = document.getElementsByClassName("cart__price");
@@ -5,7 +6,10 @@ const h1 = document.getElementsByTagName("h1");
 const host = "http://localhost:3000/";
 
 
-// fetch function gets the data from backend to fill the properties of the kanaps on cart.html page
+/**
+ * Récupération des données du BACKEND pour remplir les propiétes des canapés dans la page cart.html
+ * @return { HTMLElement }
+ */
 function fetchIdData() {
   let items = getCart();
   let qty = 0;
@@ -39,12 +43,12 @@ function fetchIdData() {
                   </div>
                 </div>
               </article>`;
-          // total price (if qty (items[i][2]))
+          // prix total (if qty (items[i][2]))
           price += data.price * items[i][2];
           document.getElementById("totalPrice").innerHTML = price;
         });
 
-      // total Quantity
+      // quantité totale
       qty += parseInt(items[i][2]);
       document.getElementById("totalQuantity").innerHTML = qty;
     }
@@ -54,10 +58,13 @@ function fetchIdData() {
     cartPrice[0].innerHTML = "";
   }
 }
-
 fetchIdData();
 
-// fetch function how refresh the data cart
+
+/**
+ * Fonction qui rafraichie les données du panier à la suppression et au changement de quantité d'articles dans le panier
+ * @return { HTMLElement }
+ */
 function reloadCart() {
   let items = getCart();
   let qty = 0;
@@ -70,12 +77,12 @@ function reloadCart() {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          // total price (if qty (items[i][2]))
+          // prix total (if qty (items[i][2]))
           price += data.price * items[i][2];
           document.getElementById("totalPrice").innerHTML = price;
         });
 
-      // total Quantity
+      // quantité totale
       qty += parseInt(items[i][2]);
       document.getElementById("totalQuantity").innerHTML = qty;
     }
@@ -87,14 +94,14 @@ function reloadCart() {
 }
 
 
-// function with addEventListener that fetches 'postUrl' et posts 'contact' and 'products' to retrieve the confirmation page URL
+// Récupération et validation des donnés du formulaire "client" afin de valider l'achat
 if (localStorage.getItem("panier") != null) {
   const postUrl = host + "api/products/order/";
   const orderButton = document.getElementById("order");
   orderButton.addEventListener("click", (e) => {
-    e.preventDefault(); //prevent default form button action
+    e.preventDefault();
 
-    // then below, prevent fetch to post without REGEXs permission :
+    // quelques vérifications avec des regex avant d'envoyer les  données du formulaire:
     let email = validateEmail(mail.value);
     let firstName = validateFirstName(prenom.value);
     let lastName = validateLastName(nom.value);
@@ -127,6 +134,8 @@ if (localStorage.getItem("panier") != null) {
 
     let jsonData = makeJsonData();
     
+
+    // envoi des données du formulaire en POST et redirection vers la page de confirmation si tous ce passe bien
     fetch(postUrl, {
       method: "POST",
       headers: {
@@ -135,7 +144,7 @@ if (localStorage.getItem("panier") != null) {
       body: jsonData,
     })
       .then((res) => res.json())
-      // to check res.ok status in the network
+      // on check le status res.ok 
       .then((data) => {
         localStorage.clear();
         let confirmationUrl = "./confirmation.html?id=" + data.orderId;
@@ -143,6 +152,6 @@ if (localStorage.getItem("panier") != null) {
       })
       .catch(() => {
         alert("Une erreur est survenue, merci de revenir plus tard.");
-      }); // catching errors
+      }); // on attrape ici les erreurs
   });
 }

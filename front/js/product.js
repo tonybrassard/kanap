@@ -1,6 +1,4 @@
-////////
-// recover id product
-////////
+// recupération de l'id du produit
 const str = window.location;
 const url = new URL(str);
 const id = url.searchParams.get("id");
@@ -8,9 +6,11 @@ const host = "http://localhost:3000/";
 const objectURL = host + "api/products/" + id;
 var section = document.querySelector(".item");
 
-/////////
-// Fetching one product backend data and display to DOM
-/////////
+
+/**
+ * Récupération des caractéristiques d'un produit pour les afficher dans le DOM
+ * @return { HTMLElement }
+ */
 let cardsFetch = function () {
   fetch(objectURL)
     .then((response) => response.json())
@@ -36,23 +36,30 @@ let cardsFetch = function () {
     })
     ;
 };
-
 cardsFetch();
 
 
-// function that gets quantity value of the form in the markup
+/**
+ * Récupére la quantité d'un article à ajouter au panier
+ * @return { number }
+ */
 function qtyValue() {
   let qty = document.getElementById("quantity");
   return qty.value;
 }
 
-// function that get the kanap color value in the markup
+
+/**
+ * Récupére la valeur de la couleur souhaitée du canapé
+ * @return { number }
+ */
 function colorValue() {
   let color = document.getElementById("colors");
   return color.value;
 }
 
-// HTML element : button add to cart and button go to cart
+
+// éléments HTML concernant les boutons "ajouter au panier" et "aller au panier"
 const addCartBtn = document.getElementById("addToCart");
 var goToCart = document.createElement("div")
 goToCart.setAttribute("id", "goToCart");
@@ -60,7 +67,8 @@ goToCart.classList.add("item__content__addButton")
 var itemContent = document.querySelector(".item__content");
 itemContent.append(goToCart)
 
-// at button press : display go to caty button and activate function add2Cart
+
+// bouton "ajouter au panier" : Affiche le bouton goToCart et active la fonction "Ajouter au panier"
 addCartBtn.addEventListener("click", () => {
   let qty = parseInt(qtyValue());
   let color = colorValue();
@@ -81,7 +89,11 @@ addCartBtn.addEventListener("click", () => {
 
 });
 
-// at button press : redirection to cart.html
+
+// bouton "aller au panier" : Redirection vers cart.html
 goToCart.addEventListener("click", () => {
-  window.location.href = "./cart.html";
+  myElement = document.getElementById("goToCart")
+  if(!(myElement.textContent.includes('valide'))){
+    window.location.href = "./cart.html";
+  }
 });

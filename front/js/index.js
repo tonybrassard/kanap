@@ -2,7 +2,10 @@ const host = "http://localhost:3000/";
 const getUrl = host + "api/products/";
 var productSection = document.getElementById("items");
 
-// Fonction qui récupere tout les produits et qui les affiche dans le DOM
+/**
+ * Fonction qui récupere tout les produits et qui les affiche dans le DOM
+ * @return { HTMLElement }
+ */
 let cardsFetch = function () {
   fetch(getUrl)
     .then((response) => response.json())
